@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Canvas Game</title>
+</head>
+<body>
+
+<div></div>
+
+<script type="text/javascript">
+//console.dir(document.body);
+	// Create the canvas tag with JS
+	var canvas = document.createElement('canvas');
+	// Create a context for JS to play with(methods, properties,,...)
+	var context = canvas.getContext('2d')
+	
+	// Give the canvas some height and width
+	canvas.width = 512;
+	canvas.height = 480;
+		
+
+	// Add the canvas tag to the DOM
+	document.body.appendChild(canvas);
+
+	var backgroundImage = new Image();
+	backgroundImage.src = "background.png";
+
+	// Make a var for our hero. He is an image!
+	var hero = new Image();
+	hero.src = "hero.png";
+
+	// Make hero move! Make into a variable
+	var heroLocation = {
+		x:100,
+		y:100
+	}
+
+	// Make a var for our bad guy. He is an image!
+	var monster = new Image();
+	monster.src = "monster.png";
+
+	var monsterLocation = {
+		x:200,
+		y:100
+	}
+	
+	// An array to hold all the keys that are currently pressed down.
+	var keysDown = [];
+
+	addEventListener('keyup', function(event){
+		delete keysDown[event.keyCode];
+	});
+
+	// We need a way to tell if the user has pushed an arrow key. Event listeners: First thing is "what", second piece is what code to run. In the example below, code only happens when keydown happens.
+	addEventListener('keydown', function(event){
+		// if keyDown[39] is true, then the user pushed the right arrow.
+		// if keyDown[40] is true, then the user pushed the down arrow.
+		// if keyDown[37] is true, then the user pushed the left arrow.
+		// if keyDown[38] is true, then the user pushed the up arrow.
+		keysDown[event.keyCode] = true;
+		//console.log(keysDown);
+
+
+		// We know a key was pressed, or we wouldn't be in here
+		// What key did they press? Event object is passed on. Because of the key property, we know what key they pressed.
+		
+		// console.log(event.key);
+		// if (event.key === 'ArrowDown'){
+		// 	console.log('User pressed down arrow');
+		// 	heroLocation.y += 10;
+		// } 
+		// if (event.key === 'ArrowUp'){
+		// 	console.log('User pressed up arrow');
+		// 	heroLocation.y -= 10;
+		// }
+		// if (event.key === 'ArrowLeft'){
+		// 	console.log('User pressed left arrow');
+		// 	heroLocation.x -= 10;
+		// }
+		// if (event.key === 'ArrowRight'){
+		// 	console.log('User pressed right arrow');
+		// 	heroLocation.x += 10;
+		// }
+	});
+
+	// This is where we will update the hero based on what's true in keysDown
+
+
+	function update(){
+		if(39 in keysDown){
+			if (heroLocation.x <= 400){
+				heroLocation.x += 10;
+			}
+			// write an if statement to make x=right side of the screen because guy will fall off the screen
+		}
+		if(37 in keysDown){
+			if(heroLocation.x >= 10){
+				heroLocation.x -= 10;
+			}
+		}
+		if(38 in keysDown){
+			if(heroLocation.y >= 10){
+				heroLocation.y -= 10;
+			}
+		}
+		if(40 in keysDown){
+			if(heroLocation.y <= 400){
+				heroLocation.y += 10;
+			}
+		}
+
+		if(
+			(heroLocation.x <= monsterLocation.x + 32)
+			&& (heroLocation.y <= monsterLocation.y + 32)
+			&& (monsterLocation.x <= heroLocation.x + 32)
+			&& (monsterLocation.y <= heroLocation.y + 32)
+		){
+			//console.log("Hero is within 32 of the monster");
+			console.log("Hero caught the monster");
+			var random = Math.random() * 200;
+			var random2 = Math.random() * 200;
+			monsterLocation.x = random;
+			monsterLocation.y = random2;
+		}else{
+			console.log("Hero is not close enough!");
+		}
+	}
+
+	// Make monster move on it's own until caught by hero.png. Use switches to make monster move in a line.
+
+
+
+
+// Keep this at the bottom
+	function draw(){
+		update();
+		// Put our backgroundImage on the context at x = 0, y = 0. 3 parameters: what to draw, where (x and y coordinate)?
+		context.drawImage(backgroundImage, 0, 0);
+		context.drawImage(hero, heroLocation.x, heroLocation.y);
+		context.drawImage(monster, monsterLocation.x, monsterLocation.y);
+		requestAnimationFrame(draw);
+	} 
+
+draw();
+
+</script>
+
+</body>
+</html>
+
